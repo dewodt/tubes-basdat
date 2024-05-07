@@ -1,0 +1,17 @@
+{
+  "name": "seed-basdat",
+  "version": "1.0.0",
+  "description": "milestone 2 basdat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "date-fns": "^3.6.0",
+    "mariadb": "^3.3.0",
+    "tsx": "^4.9.1"
+  }
+}

@@ -1,0 +1,28 @@
+Jumlah row yg hrs dibuat
+AppleID: 20
+
+SubscriptionPlan: 3
+
+AppleMusicUser: 2 * 50 = 100
+
+Label: 20
+
+ExtraVideo: 2 * 50 = 100
+
+Song: 2 * 50 = 100
+
+Music Video: 2 * 50 = 100
+
+AudioQuality: 1 * 50 = 50
+
+Lyrics: 2 * 50 = 100
+
+ProdukKomersial: 1 * 50 = 50
+
+Memasarkan: 2 * 50 = 100
+
+Playlist: 1 * 50 = 50
+
+TerdiriDari: 3 * 50 = 150
+
+Menghost: 2 * 50 = 100
