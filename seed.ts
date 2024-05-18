@@ -462,22 +462,33 @@ const Main = async () => {
   });
 
   // GENERATED PLAYLIST
-  const generatedPlaylist = playlistIds.map((id) => {
-    // Randomize email creator
-    const randomAppleMusicUser = faker.helpers.arrayElement(
-      generatedAppleMusicUser
-    );
+  // 80% AppleID created 2-4 playlists
+  const generatedPlaylist = generatedAppleID
+    .filter((_, i) => i * 100 < 85 * generatedAppleID.length)
+    .map((appleID, _j) => {
+      return Array.from(
+        { length: faker.number.int({ min: 2, max: 5 }) },
+        (_, j) => {
+          // Find random apple music user subscription from the same email
 
-    return {
-      idPlaylist: id,
-      emailCreator: randomAppleMusicUser.email,
-      idSubscriptionCreator: randomAppleMusicUser.idSubscription,
-      namaPlaylist:
-        faker.science.chemicalElement().name +
-        faker.music.genre() +
-        faker.music.songName(),
-    };
-  });
+          const validSubscriptions = generatedAppleMusicUser.filter(
+            (user) => user.email == appleID.email
+          );
+
+          const pickedSubscription =
+            faker.helpers.arrayElement(validSubscriptions);
+
+          return {
+            idPlaylist: j + 1,
+            emailCreator: appleID.email,
+            idSubscriptionCreator: pickedSubscription.idSubscription,
+            namaPlaylist:
+              faker.music.genre() + " " + faker.science.chemicalElement.name,
+          };
+        }
+      );
+    })
+    .flat();
 
   // GENERATED TERDIRI DARI
   const generatedTerdiriDari = generatedPlaylist
@@ -493,7 +504,9 @@ const Main = async () => {
           const unpickedSongIdProductId = generatedMemasarkan.filter(
             (pasar) => {
               return !pickedSongIdProductId.includes(
-                pasar.idSong + "_" + pasar.idProdukKomersial
+                pasar.idSong.toString() +
+                  "_" +
+                  pasar.idProdukKomersial.toString()
               );
             }
           );
@@ -505,13 +518,14 @@ const Main = async () => {
 
           // Push to picked
           pickedSongIdProductId.push(
-            randomSelectedUnpicked.idSong +
+            randomSelectedUnpicked.idSong.toString() +
               "_" +
-              randomSelectedUnpicked.idProdukKomersial
+              randomSelectedUnpicked.idProdukKomersial.toString()
           );
 
           return {
             idPlaylist: playlist.idPlaylist,
+            emailCreator: playlist.emailCreator,
             idSong: randomSelectedUnpicked.idSong,
             idProdukKomersial: randomSelectedUnpicked.idProdukKomersial,
           };
@@ -540,7 +554,7 @@ const Main = async () => {
   // Create mariadb pool
   const pool = mariadb.createPool({
     host: "localhost",
-    user: "tubes2",
+    user: "college",
     password: "12345",
     database: "apple_music",
   });
@@ -551,6 +565,22 @@ const Main = async () => {
 
   // INSERT APPLEID
   try {
+    // Delete all data
+    await connection.query("DELETE FROM Menghost");
+    await connection.query("DELETE FROM TerdiriDari");
+    await connection.query("DELETE FROM Playlist");
+    await connection.query("DELETE FROM Memasarkan");
+    await connection.query("DELETE FROM ProdukKomersial");
+    await connection.query("DELETE FROM Lyrics");
+    await connection.query("DELETE FROM AudioQuality");
+    await connection.query("DELETE FROM MusicVideo");
+    await connection.query("DELETE FROM Song");
+    await connection.query("DELETE FROM ExtraVideo");
+    await connection.query("DELETE FROM Label");
+    await connection.query("DELETE FROM AppleMusicUser");
+    await connection.query("DELETE FROM SubscriptionPlan");
+    await connection.query("DELETE FROM AppleID");
+
     await connection.batch(
       "INSERT INTO AppleID VALUES (?, ?, ?, ?)",
       generatedAppleID.map((appleID) => [
@@ -694,9 +724,10 @@ const Main = async () => {
 
     // INSERT TERDIRI DARI
     await connection.batch(
-      "INSERT INTO TerdiriDari VALUES (?, ?, ?)",
+      "INSERT INTO TerdiriDari VALUES (?, ?, ?, ?)",
       generatedTerdiriDari.map((terdiri) => [
         terdiri.idPlaylist,
+        terdiri.emailCreator,
         terdiri.idSong,
         terdiri.idProdukKomersial,
       ])

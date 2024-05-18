@@ -280,7 +280,7 @@ CREATE TABLE `Playlist` (
   `emailCreator` varchar(255) NOT NULL,
   `idSubscriptionCreator` int(10) unsigned NOT NULL,
   `namaPlaylist` varchar(255) NOT NULL,
-  PRIMARY KEY (`idPlaylist`),
+  PRIMARY KEY (`idPlaylist`,`emailCreator`),
   KEY `emailCreator` (`emailCreator`,`idSubscriptionCreator`),
   CONSTRAINT `Playlist_ibfk_1` FOREIGN KEY (`emailCreator`, `idSubscriptionCreator`) REFERENCES `AppleMusicUser` (`email`, `idSubscription`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -389,14 +389,16 @@ DROP TABLE IF EXISTS `TerdiriDari`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TerdiriDari` (
   `idPlaylist` int(10) unsigned NOT NULL,
+  `emailCreator` varchar(255) NOT NULL,
   `idSong` int(10) unsigned NOT NULL,
   `idProdukKomersial` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`idPlaylist`,`idSong`,`idProdukKomersial`),
+  PRIMARY KEY (`idPlaylist`,`emailCreator`,`idSong`,`idProdukKomersial`),
   KEY `idSong` (`idSong`),
   KEY `idProdukKomersial` (`idProdukKomersial`),
   CONSTRAINT `TerdiriDari_ibfk_1` FOREIGN KEY (`idPlaylist`) REFERENCES `Playlist` (`idPlaylist`),
   CONSTRAINT `TerdiriDari_ibfk_2` FOREIGN KEY (`idSong`) REFERENCES `Song` (`idSong`),
-  CONSTRAINT `TerdiriDari_ibfk_3` FOREIGN KEY (`idProdukKomersial`) REFERENCES `ProdukKomersial` (`idProdukKomersial`)
+  CONSTRAINT `TerdiriDari_ibfk_3` FOREIGN KEY (`idProdukKomersial`) REFERENCES `ProdukKomersial` (`idProdukKomersial`),
+  CONSTRAINT `TerdiriDari_ibfk_4` FOREIGN KEY (`emailCreator`) REFERENCES `AppleMusicUser` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -418,4 +420,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-06  0:39:17
+-- Dump completed on 2024-05-18 17:01:10
